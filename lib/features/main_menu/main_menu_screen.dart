@@ -7,7 +7,7 @@ class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Main menu')),
+      appBar: AppBar(title: const Text('Main menu')),
 
       body: Column(
         children: [
@@ -15,8 +15,8 @@ class MainMenuScreen extends StatelessWidget {
             onTap: () => router.go('/x01settings'),
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.all(8),
-              child: Text('X01'),
+              padding: const EdgeInsets.all(8),
+              child: const Text('X01'),
             ),
           ),
         ],

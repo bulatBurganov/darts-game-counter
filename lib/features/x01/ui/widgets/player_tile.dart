@@ -14,7 +14,7 @@ class PlayerTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: isSelected ? Border.all(width: 1, color: Colors.red) : null,
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           Expanded(
@@ -23,9 +23,12 @@ class PlayerTile extends StatelessWidget {
               children: [
                 Text(
                   player.score.toString(),
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Text(player.name, style: TextStyle(fontSize: 16)),
+                Text(player.name, style: const TextStyle(fontSize: 16)),
               ],
             ),
           ),
@@ -62,7 +65,7 @@ class _ScoreField extends StatelessWidget {
       ),
       alignment: Alignment.center,
       width: 35,
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Text(points.getString()),
     );
   }

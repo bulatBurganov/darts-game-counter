@@ -30,7 +30,7 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
       ),
       decoration: BoxDecoration(
         color: Colors.grey[200],
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
         ),
@@ -66,7 +66,7 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -107,7 +107,7 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
               ElevatedButton(
                 onPressed: widget.onUndo,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                child: Icon(Icons.undo),
+                child: const Icon(Icons.undo),
               ),
             ],
           ),
@@ -127,8 +127,8 @@ class ScoreButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => onPressed(value),
-      style: ElevatedButton.styleFrom(minimumSize: Size(40, 40)),
-      child: Text(value.toString(), style: TextStyle(fontSize: 16)),
+      style: ElevatedButton.styleFrom(minimumSize: const Size(40, 40)),
+      child: Text(value.toString(), style: const TextStyle(fontSize: 16)),
     );
   }
 }

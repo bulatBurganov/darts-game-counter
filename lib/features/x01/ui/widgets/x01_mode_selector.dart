@@ -1,4 +1,4 @@
-import 'package:darts_counter/features/x01/domain/constants/x01_params.dart';
+import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
 import 'package:flutter/material.dart';
 
 class X01ModeSelector extends StatefulWidget {

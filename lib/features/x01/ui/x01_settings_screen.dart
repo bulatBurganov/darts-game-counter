@@ -1,5 +1,4 @@
 import 'package:darts_counter/features/ui-core/app_rounded_button.dart';
-import 'package:darts_counter/features/x01/domain/constants/x01_params.dart';
 import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
 import 'package:darts_counter/features/x01/ui/widgets/in_out_selector.dart';
 import 'package:darts_counter/features/x01/ui/widgets/players_count_slider.dart';
@@ -101,9 +100,9 @@ class X01SettingsScreen extends StatelessWidget {
 }
 
 class X01SettingsViewModel extends ChangeNotifier {
-  var _currentState = const X01SettingsModel();
+  var _currentState = const X01GameSettingsModel();
 
-  X01SettingsModel get settings => _currentState;
+  X01GameSettingsModel get settings => _currentState;
 
   Future<void> updateMode(X01Modes mode) async {
     _currentState = _currentState.copyWith(mode: mode);
