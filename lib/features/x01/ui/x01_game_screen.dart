@@ -20,7 +20,9 @@ class _X01GameScreenState extends State<X01GameScreen> {
         onScoreAdded: (points) {
           widget.viewModel.addPoints(points);
         },
-        onUndo: () {},
+        onUndo: () {
+          widget.viewModel.undo();
+        },
       ),
       body: ListenableBuilder(
         listenable: widget.viewModel,
