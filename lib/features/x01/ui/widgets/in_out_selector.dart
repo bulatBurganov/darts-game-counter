@@ -9,12 +9,14 @@ class InOutModeSelector extends StatefulWidget {
     this.height = 50,
     this.padding = 4,
     this.initialValue,
+    this.selectorColor,
   });
   final Duration swithDuration;
   final double height;
   final double padding;
   final InOutModes? initialValue;
   final Function(InOutModes mode) onCahnged;
+  final Color? selectorColor;
 
   @override
   State<InOutModeSelector> createState() => _InOutModeSelectorState();
@@ -57,7 +59,7 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
                         width: itemWidth,
                         height: widget.height - widget.padding * 2,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: widget.selectorColor ?? Colors.blue,
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),

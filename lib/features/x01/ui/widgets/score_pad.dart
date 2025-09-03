@@ -21,97 +21,86 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        left: 8,
-        right: 8,
-        top: 8,
-        bottom: MediaQuery.of(context).padding.bottom,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: [
-              for (int i = 0; i <= 20; i++)
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              children: [
+                for (int i = 0; i <= 20; i++)
+                  ScoreButton(
+                    value: i,
+                    onPressed: (points) {
+                      if (_isDoublingEnabled) {
+                        widget.onScoreAdded(DoublePoints(value: points));
+                      } else if (_isTriplingEnabled) {
+                        widget.onScoreAdded(TriplePoints(value: points));
+                      } else {
+                        widget.onScoreAdded(RegularPoints(value: points));
+                      }
+                      setState(() {
+                        _isDoublingEnabled = false;
+                        _isTriplingEnabled = false;
+                      });
+                    },
+                  ),
                 ScoreButton(
-                  value: i,
-                  onPressed: (points) {
-                    if (_isDoublingEnabled) {
-                      widget.onScoreAdded(DoublePoints(value: points));
-                    } else if (_isTriplingEnabled) {
-                      widget.onScoreAdded(TriplePoints(value: points));
-                    } else {
-                      widget.onScoreAdded(RegularPoints(value: points));
-                    }
+                  value: 25,
+                  onPressed: (points) =>
+                      widget.onScoreAdded(RegularPoints(value: points)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
                     setState(() {
-                      _isDoublingEnabled = false;
                       _isTriplingEnabled = false;
+                      _isDoublingEnabled = !_isDoublingEnabled;
                     });
                   },
-                ),
-              ScoreButton(
-                value: 25,
-                onPressed: (points) =>
-                    widget.onScoreAdded(RegularPoints(value: points)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _isTriplingEnabled = false;
-                    _isDoublingEnabled = !_isDoublingEnabled;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isDoublingEnabled ? Colors.red : null,
-                ),
-                child: Text(
-                  'Double',
-                  style: TextStyle(
-                    color: _isDoublingEnabled ? Colors.white : Colors.black,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isDoublingEnabled ? Colors.red : null,
                   ),
+                  child: const Text('Double'),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _isDoublingEnabled = false;
-                    _isTriplingEnabled = !_isTriplingEnabled;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isTriplingEnabled ? Colors.blue : null,
-                ),
-                child: Text(
-                  'Triple',
-                  style: TextStyle(
-                    color: _isTriplingEnabled ? Colors.white : Colors.black,
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _isDoublingEnabled = false;
+                      _isTriplingEnabled = !_isTriplingEnabled;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isTriplingEnabled ? Colors.blue : null,
                   ),
+                  child: const Text('Triple'),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: widget.onUndo,
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                child: const Icon(Icons.undo),
-              ),
-            ],
-          ),
-        ],
+                ElevatedButton(
+                  onPressed: widget.onUndo,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                  child: const Icon(Icons.undo),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -127,8 +116,10 @@ class ScoreButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => onPressed(value),
-      style: ElevatedButton.styleFrom(minimumSize: const Size(40, 40)),
-      child: Text(value.toString(), style: const TextStyle(fontSize: 16)),
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(MediaQuery.of(context).size.width / 8, 40),
+      ),
+      child: Text(value.toString()),
     );
   }
 }
