@@ -1,4 +1,4 @@
-import 'package:darts_counter/features/x01/domain/constants/x01_params.dart';
+import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
 import 'package:flutter/material.dart';
 
 class InOutModeSelector extends StatefulWidget {
@@ -114,7 +114,7 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
 
   String _getModeName(InOutModes mode, BuildContext context) {
     return switch (mode) {
-      InOutModes.simple => 'Straight',
+      InOutModes.straight => 'Straight',
       InOutModes.double => 'Double',
       InOutModes.triple => 'Triple',
     };

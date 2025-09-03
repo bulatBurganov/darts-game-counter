@@ -4,7 +4,7 @@ import 'package:darts_counter/features/x01/ui/widgets/score_pad.dart';
 import 'package:flutter/material.dart';
 
 class X01GameScreen extends StatefulWidget {
-  final X01GameViewModel viewModel;
+  final X01ViewModel viewModel;
   const X01GameScreen({super.key, required this.viewModel});
 
   @override
@@ -28,7 +28,7 @@ class _X01GameScreenState extends State<X01GameScreen> {
         listenable: widget.viewModel,
         builder: (context, _) {
           return Padding(
-            padding: EdgeInsets.only(left: 8, right: 8),
+            padding: const EdgeInsets.only(left: 8, right: 8),
             child: Column(
               children: [
                 Text('Current round: ${widget.viewModel.currentRound}'),

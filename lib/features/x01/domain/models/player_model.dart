@@ -4,21 +4,39 @@ class PlayerModel {
   final String name;
   final int score;
   final List<Points> currentRoundPoints;
+  final bool isInGame;
+  final int
+  entryShotIndex; // Индекс броска, которым игрок вошел в игру (-1 если еще не вошел)
+  final int startOfTurnScore; // Счет в начале хода
 
-  PlayerModel(
+  const PlayerModel(
     this.name, {
-    this.score = 301,
+    required this.score,
     this.currentRoundPoints = const [
       EmptyPoints(),
       EmptyPoints(),
       EmptyPoints(),
     ],
+    this.isInGame = false,
+    this.entryShotIndex = -1,
+    required this.startOfTurnScore,
   });
 
-  PlayerModel copyWith({int? score, List<Points>? currentRoundPoints}) =>
-      PlayerModel(
-        name,
-        score: score ?? this.score,
-        currentRoundPoints: currentRoundPoints ?? this.currentRoundPoints,
-      );
+  PlayerModel copyWith({
+    String? name,
+    int? score,
+    List<Points>? currentRoundPoints,
+    bool? isInGame,
+    int? entryShotIndex,
+    int? startOfTurnScore,
+  }) {
+    return PlayerModel(
+      name ?? this.name,
+      score: score ?? this.score,
+      currentRoundPoints: currentRoundPoints ?? this.currentRoundPoints,
+      isInGame: isInGame ?? this.isInGame,
+      entryShotIndex: entryShotIndex ?? this.entryShotIndex,
+      startOfTurnScore: startOfTurnScore ?? this.startOfTurnScore,
+    );
+  }
 }

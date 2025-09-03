@@ -19,10 +19,8 @@ final router = GoRouter(
         GoRoute(
           path: 'x01game',
           builder: (context, state) {
-            final settings = state.extra as X01SettingsModel;
-            return X01GameScreen(
-              viewModel: X01GameViewModel(settings: settings),
-            );
+            final settings = state.extra as X01GameSettingsModel;
+            return X01GameScreen(viewModel: X01ViewModel(settings: settings));
           },
         ),
       ],
