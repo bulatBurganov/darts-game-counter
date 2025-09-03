@@ -36,8 +36,6 @@ class _PlayerCountSliderState extends State<PlayerCountSlider> {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           min: 1,
           max: 16,
-          thumbColor: Colors.green,
-          activeColor: Colors.green[100],
           divisions: 15,
           value: count,
           onChanged: (value) {

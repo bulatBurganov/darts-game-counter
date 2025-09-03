@@ -8,7 +8,9 @@ import 'package:go_router/go_router.dart';
 
 class X01SettingsScreen extends StatelessWidget {
   final X01SettingsViewModel viewModel;
-  const X01SettingsScreen({super.key, required this.viewModel});
+  X01SettingsScreen({super.key, required this.viewModel}) {
+    print('object');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,7 @@ class X01SettingsScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     InOutModeSelector(
                       initialValue: viewModel.settings.inMode,
+                      selectorColor: Theme.of(context).colorScheme.primary,
                       onCahnged: (mode) {
                         viewModel.updateInMode(mode);
                       },
@@ -61,6 +64,8 @@ class X01SettingsScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     InOutModeSelector(
                       initialValue: viewModel.settings.outMode,
+                      selectorColor: Theme.of(context).colorScheme.primary,
+
                       onCahnged: (mode) {
                         viewModel.updateOutMode(mode);
                       },
@@ -82,7 +87,8 @@ class X01SettingsScreen extends StatelessWidget {
                     const Spacer(),
                     AppRoundedButton(
                       text: 'Start',
-                      color: Colors.green,
+                      color: Theme.of(context).colorScheme.primary,
+
                       textColor: Colors.white,
                       onTap: () {
                         context.push('/x01game', extra: viewModel.settings);
@@ -100,6 +106,9 @@ class X01SettingsScreen extends StatelessWidget {
 }
 
 class X01SettingsViewModel extends ChangeNotifier {
+  X01SettingsViewModel() {
+    print('constructor');
+  }
   var _currentState = const X01GameSettingsModel();
 
   X01GameSettingsModel get settings => _currentState;

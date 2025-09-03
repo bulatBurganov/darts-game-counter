@@ -2,6 +2,7 @@ import 'package:darts_counter/features/x01/domain/x01_game_view_model.dart';
 import 'package:darts_counter/features/x01/ui/widgets/player_tile.dart';
 import 'package:darts_counter/features/x01/ui/widgets/score_pad.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class X01GameScreen extends StatefulWidget {
   final X01ViewModel viewModel;
@@ -12,6 +13,18 @@ class X01GameScreen extends StatefulWidget {
 }
 
 class _X01GameScreenState extends State<X01GameScreen> {
+  @override
+  void initState() {
+    widget.viewModel.addListener(_onViewModelChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.viewModel.removeListener(_onViewModelChanged);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,21 +42,54 @@ class _X01GameScreenState extends State<X01GameScreen> {
         builder: (context, _) {
           return Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
-            child: Column(
-              children: [
-                Text('Current round: ${widget.viewModel.currentRound}'),
-                ...List.generate(
-                  widget.viewModel.players.length,
-                  (i) => PlayerTile(
-                    player: widget.viewModel.players[i],
-                    isSelected: widget.viewModel.currentPlayerIndex == i,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 4),
+                  Text(
+                    'Current round: ${widget.viewModel.currentRound}',
+                    style: const TextStyle(fontSize: 16),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Column(
+                    spacing: 8,
+                    children: List.generate(
+                      widget.viewModel.players.length,
+                      (i) => PlayerTile(
+                        player: widget.viewModel.players[i],
+                        isSelected: widget.viewModel.currentPlayerIndex == i,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
       ),
     );
+  }
+
+  void _onViewModelChanged() {
+    if (widget.viewModel.winner != null) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('${widget.viewModel.winner} wins'),
+            children: [
+              FilledButton(
+                onPressed: () {
+                  context.pop();
+                },
+                child: const Text('Finish'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }

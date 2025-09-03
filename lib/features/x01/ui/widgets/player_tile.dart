@@ -9,10 +9,16 @@ class PlayerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 350),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        border: isSelected ? Border.all(width: 1, color: Colors.red) : null,
+        border: Border.all(
+          width: 2,
+          color: isSelected
+              ? Theme.of(context).colorScheme.secondary
+              : Colors.transparent,
+        ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(

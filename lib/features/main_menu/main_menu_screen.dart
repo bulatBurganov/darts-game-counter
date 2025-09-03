@@ -1,4 +1,5 @@
 import 'package:darts_counter/features/navigation/routes.dart';
+import 'package:darts_counter/features/ui-core/app_rounded_button.dart';
 import 'package:flutter/material.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -9,17 +10,21 @@ class MainMenuScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Main menu')),
 
-      body: Column(
-        children: [
-          GestureDetector(
-            onTap: () => router.go('/x01settings'),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              child: const Text('X01'),
-            ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Column(
+            children: [
+              AppRoundedButton(
+                onTap: () => router.push('/x01settings'),
+                text: 'X01',
+                color: Theme.of(context).colorScheme.primary,
+                textColor: Colors.white,
+                borderRadius: 8,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

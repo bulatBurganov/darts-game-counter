@@ -8,6 +8,8 @@ class AppRoundedButton extends StatelessWidget {
   final Widget? suffix;
   final Color? color;
   final double? height;
+
+  final double borderRadius;
   const AppRoundedButton({
     this.text,
     super.key,
@@ -17,6 +19,7 @@ class AppRoundedButton extends StatelessWidget {
     this.textColor,
     this.height = 50,
     required this.onTap,
+    this.borderRadius = 50,
   });
 
   @override
@@ -25,7 +28,7 @@ class AppRoundedButton extends StatelessWidget {
       color: color,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusGeometry.circular(25),
+        borderRadius: BorderRadiusGeometry.circular(borderRadius),
       ),
       child: InkWell(
         onTap: onTap,
