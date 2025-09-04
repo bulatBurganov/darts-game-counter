@@ -1,3 +1,4 @@
+import 'package:darts_counter/features/navigation/router.dart';
 import 'package:darts_counter/features/navigation/routes.dart';
 import 'package:darts_counter/features/ui-core/app_rounded_button.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class MainMenuScreen extends StatelessWidget {
           child: Column(
             children: [
               AppRoundedButton(
-                onTap: () => router.push('/x01settings'),
+                onTap: () => router.push(Routes.x01settings),
                 text: 'X01',
                 color: Theme.of(context).colorScheme.primary,
                 textColor: Colors.white,

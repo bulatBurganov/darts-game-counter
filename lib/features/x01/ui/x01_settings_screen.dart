@@ -1,3 +1,4 @@
+import 'package:darts_counter/features/navigation/routes.dart';
 import 'package:darts_counter/features/ui-core/app_rounded_button.dart';
 import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
 import 'package:darts_counter/features/x01/ui/widgets/in_out_selector.dart';
@@ -15,7 +16,10 @@ class X01SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        leading: BackButton(onPressed: () => context.pop()),
+      ),
       body: ListenableBuilder(
         listenable: viewModel,
         builder: (context, _) {
@@ -91,7 +95,7 @@ class X01SettingsScreen extends StatelessWidget {
 
                       textColor: Colors.white,
                       onTap: () {
-                        context.push('/x01game', extra: viewModel.settings);
+                        context.push(Routes.x01game, extra: viewModel.settings);
                       },
                     ),
                   ],

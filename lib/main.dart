@@ -1,4 +1,4 @@
-import 'package:darts_counter/features/navigation/routes.dart';
+import 'package:darts_counter/features/navigation/router.dart';
 import 'package:darts_counter/features/ui-core/theme/app_theme.dart';
 import 'package:darts_counter/features/ui-core/theme/theme_provier.dart';
 import 'package:flutter/material.dart';
