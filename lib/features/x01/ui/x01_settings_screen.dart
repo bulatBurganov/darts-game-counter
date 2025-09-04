@@ -34,6 +34,7 @@ class X01SettingsScreen extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 8),
                     X01ModeSelector(
                       initialValue: viewModel.settings.mode,
                       onModeChanged: (mode) {

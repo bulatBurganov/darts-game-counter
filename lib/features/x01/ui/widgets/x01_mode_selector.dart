@@ -38,7 +38,7 @@ class _X01ModeSelectorState extends State<X01ModeSelector> {
           onTap: () async {
             final res = await showModalBottomSheet<X01Modes>(
               context: context,
-              builder: (context) => const X01ModeSelectorBottomSheet(),
+              builder: (context) => const _X01ModeSelectorBottomSheet(),
             );
             if (res != null) {
               setState(() {
@@ -57,7 +57,10 @@ class _X01ModeSelectorState extends State<X01ModeSelector> {
               children: [
                 Text(
                   selected.name.replaceAll('x', ''),
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const Icon(Icons.keyboard_arrow_down_outlined),
               ],
@@ -69,8 +72,8 @@ class _X01ModeSelectorState extends State<X01ModeSelector> {
   }
 }
 
-class X01ModeSelectorBottomSheet extends StatelessWidget {
-  const X01ModeSelectorBottomSheet({super.key});
+class _X01ModeSelectorBottomSheet extends StatelessWidget {
+  const _X01ModeSelectorBottomSheet();
 
   @override
   Widget build(BuildContext context) {
@@ -97,11 +100,19 @@ class X01ModeSelectorBottomSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
                 X01Modes.values[index].name.replaceAll('x', ''),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
-          separatorBuilder: (context, index) => const SizedBox(height: 4),
+          separatorBuilder: (context, index) => const Divider(
+            height: 16,
+            thickness: 0.5,
+            indent: 8,
+            endIndent: 8,
+          ),
           itemCount: X01Modes.values.length,
         ),
         SizedBox(height: MediaQuery.of(context).padding.bottom),

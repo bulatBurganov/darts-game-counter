@@ -41,17 +41,29 @@ class _X01GameScreenState extends State<X01GameScreen> {
         listenable: widget.viewModel,
         builder: (context, _) {
           return Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 4),
-                  Text(
-                    'Current round: ${widget.viewModel.currentRound}',
-                    style: const TextStyle(fontSize: 16),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Text(
+                        'Current round:',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.viewModel.currentRound.toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Column(
                     spacing: 8,
                     children: List.generate(

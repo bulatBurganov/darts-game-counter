@@ -10,6 +10,7 @@ class InOutModeSelector extends StatefulWidget {
     this.padding = 4,
     this.initialValue,
     this.selectorColor,
+    this.backgroundColor,
   });
   final Duration swithDuration;
   final double height;
@@ -17,6 +18,7 @@ class InOutModeSelector extends StatefulWidget {
   final InOutModes? initialValue;
   final Function(InOutModes mode) onCahnged;
   final Color? selectorColor;
+  final Color? backgroundColor;
 
   @override
   State<InOutModeSelector> createState() => _InOutModeSelectorState();
@@ -48,7 +50,7 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
               child: Container(
                 height: widget.height,
                 padding: EdgeInsets.all(widget.padding),
-                decoration: BoxDecoration(color: Colors.grey[200]),
+                decoration: BoxDecoration(color: widget.backgroundColor),
                 child: Stack(
                   children: [
                     AnimatedPositioned(
@@ -83,7 +85,7 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
                                 style: TextStyle(
                                   color: (_selectedIndex == index)
                                       ? Colors.white
-                                      : Colors.black,
+                                      : Theme.of(context).colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
                                   overflow: TextOverflow.ellipsis,

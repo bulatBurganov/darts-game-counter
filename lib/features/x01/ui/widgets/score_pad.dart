@@ -23,7 +23,7 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: const BorderRadius.only(
@@ -38,14 +38,16 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
               spacing: 4,
               runSpacing: 4,
               children: [
-                for (int i = 0; i <= 20; i++)
+                for (int i = 0; i <= 21; i++)
                   ScoreButton(
-                    value: i,
+                    value: i == 21 ? 25 : i,
                     onPressed: (points) {
                       if (_isDoublingEnabled) {
                         widget.onScoreAdded(DoublePoints(value: points));
                       } else if (_isTriplingEnabled) {
-                        widget.onScoreAdded(TriplePoints(value: points));
+                        if (i != 21) {
+                          widget.onScoreAdded(TriplePoints(value: points));
+                        }
                       } else {
                         widget.onScoreAdded(RegularPoints(value: points));
                       }
@@ -55,11 +57,6 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
                       });
                     },
                   ),
-                ScoreButton(
-                  value: 25,
-                  onPressed: (points) =>
-                      widget.onScoreAdded(RegularPoints(value: points)),
-                ),
               ],
             ),
             const SizedBox(height: 8),

@@ -2,8 +2,11 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color primaryColor = Color(
-    0xFF00C853,
+  static const Color primaryColor = Color.fromARGB(
+    255,
+    0,
+    127,
+    53,
   ); // Зеленый, ассоциирующийся с дартсом
   static const Color secondaryColor = Color(
     0xFFF57C00,
@@ -11,7 +14,7 @@ class AppTheme {
   static const Color errorColor = Color(0xFFD32F2F); // Красный для ошибок
   static const Color backgroundColorLight = Color.fromARGB(255, 226, 226, 226);
   static const Color surfaceColorLight = Color(0xFFFFFFFF);
-  static const Color backgroundColorDark = Color(0xFF121212);
+  static const Color backgroundColorDark = Color.fromARGB(255, 46, 46, 46);
   static const Color surfaceColorDark = Color(0xFF1E1E1E);
 
   static ThemeData get lightTheme {

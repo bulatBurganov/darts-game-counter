@@ -13,9 +13,11 @@ class MainMenuScreen extends StatelessWidget {
 
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             children: [
+              const SizedBox(height: 8),
+
               AppRoundedButton(
                 onTap: () => router.push(Routes.x01settings),
                 text: 'X01',
