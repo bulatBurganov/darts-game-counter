@@ -1,4 +1,5 @@
 import 'package:darts_counter/features/x01/domain/models/points_model.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class ScoreInputSection extends StatefulWidget {
@@ -35,6 +36,7 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Wrap(
+              alignment: WrapAlignment.center,
               spacing: 4,
               runSpacing: 4,
               children: [
@@ -73,7 +75,7 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isDoublingEnabled ? Colors.red : null,
                   ),
-                  child: const Text('Double'),
+                  child: Text(S.of(context).double),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -85,7 +87,7 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isTriplingEnabled ? Colors.blue : null,
                   ),
-                  child: const Text('Triple'),
+                  child: Text(S.of(context).triple),
                 ),
                 ElevatedButton(
                   onPressed: widget.onUndo,

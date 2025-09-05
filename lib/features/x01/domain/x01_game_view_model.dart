@@ -36,7 +36,7 @@ class X01ViewModel extends ChangeNotifier {
     final players = List<PlayerModel>.generate(
       _settings.playersCount,
       (index) => PlayerModel(
-        'Player ${index + 1}',
+        '${index + 1}',
         score: initialScore,
         isInGame: _settings.inMode == InOutModes.straight,
         startOfTurnScore: initialScore,

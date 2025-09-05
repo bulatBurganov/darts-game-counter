@@ -1,0 +1,18 @@
+{
+    "appName": "Счетчик дартс",
+    "mainMenu": "Главное меню",
+    "x01": "X01",
+    "gameSettings": "Настройки игры",
+    "mode": "Режим",
+    "gameInMode" : "Режим входа в игру",
+    "gameOutMode" : "Режим ввыхода из игры",
+    "straight" : "Прямой",
+    "double": "Двойной",
+    "triple" : "Тройной",
+    "playersCount" : "Количество игроков",
+    "currentRound": "Текущий раунд: ",
+    "playerN": "Игрок {N}",
+    "playerWins" : "{player} выиграл!",
+    "finish": "Завершить",
+    "start" : "Начать"
+}

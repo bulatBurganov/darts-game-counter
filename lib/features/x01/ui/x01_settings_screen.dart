@@ -4,6 +4,7 @@ import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart
 import 'package:darts_counter/features/x01/ui/widgets/in_out_selector.dart';
 import 'package:darts_counter/features/x01/ui/widgets/players_count_slider.dart';
 import 'package:darts_counter/features/x01/ui/widgets/x01_mode_selector.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,7 +18,7 @@ class X01SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(S.of(context).gameSettings),
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: ListenableBuilder(
@@ -38,14 +39,13 @@ class X01SettingsScreen extends StatelessWidget {
                     X01ModeSelector(
                       initialValue: viewModel.settings.mode,
                       onModeChanged: (mode) {
-                        print('on mode changed $mode');
                         viewModel.updateMode(mode);
                       },
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'In mode',
-                      style: TextStyle(
+                    Text(
+                      S.of(context).gameInMode,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -59,9 +59,9 @@ class X01SettingsScreen extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Out mode',
-                      style: TextStyle(
+                    Text(
+                      S.of(context).gameOutMode,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -76,9 +76,9 @@ class X01SettingsScreen extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Players',
-                      style: TextStyle(
+                    Text(
+                      S.of(context).playersCount,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -91,7 +91,7 @@ class X01SettingsScreen extends StatelessWidget {
                     ),
                     const Spacer(),
                     AppRoundedButton(
-                      text: 'Start',
+                      text: S.of(context).start,
                       color: Theme.of(context).colorScheme.primary,
 
                       textColor: Colors.white,

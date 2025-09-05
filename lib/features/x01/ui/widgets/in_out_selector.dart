@@ -1,4 +1,5 @@
 import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class InOutModeSelector extends StatefulWidget {
@@ -118,9 +119,9 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
 
   String _getModeName(InOutModes mode, BuildContext context) {
     return switch (mode) {
-      InOutModes.straight => 'Straight',
-      InOutModes.double => 'Double',
-      InOutModes.triple => 'Triple',
+      InOutModes.straight => S.of(context).straight,
+      InOutModes.double => S.of(context).double,
+      InOutModes.triple => S.of(context).triple,
     };
   }
 }

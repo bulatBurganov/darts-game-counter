@@ -1,4 +1,5 @@
 import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class X01ModeSelector extends StatefulWidget {
@@ -29,11 +30,11 @@ class _X01ModeSelectorState extends State<X01ModeSelector> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Mode',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        Text(
+          S.of(context).mode,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 8),
         GestureDetector(
           onTap: () async {
             final res = await showModalBottomSheet<X01Modes>(

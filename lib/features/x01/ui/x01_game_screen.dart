@@ -1,6 +1,8 @@
+import 'package:darts_counter/features/navigation/routes.dart';
 import 'package:darts_counter/features/x01/domain/x01_game_view_model.dart';
 import 'package:darts_counter/features/x01/ui/widgets/player_tile.dart';
 import 'package:darts_counter/features/x01/ui/widgets/score_pad.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,7 +30,7 @@ class _X01GameScreenState extends State<X01GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('X01 game')),
+      appBar: AppBar(title: Text(S.of(context).x01)),
       bottomNavigationBar: ScoreInputSection(
         onScoreAdded: (points) {
           widget.viewModel.addPoints(points);
@@ -49,9 +51,9 @@ class _X01GameScreenState extends State<X01GameScreen> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Text(
-                        'Current round:',
-                        style: TextStyle(fontSize: 16),
+                      Text(
+                        S.of(context).currentRound,
+                        style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(width: 4),
                       Text(
@@ -86,17 +88,22 @@ class _X01GameScreenState extends State<X01GameScreen> {
   void _onViewModelChanged() {
     if (widget.viewModel.winner != null) {
       showDialog(
-        barrierDismissible: false,
         context: context,
         builder: (context) {
           return SimpleDialog(
-            title: Text('${widget.viewModel.winner} wins'),
+            contentPadding: const EdgeInsetsGeometry.all(8),
+            title: Text(
+              S
+                  .of(context)
+                  .playerWins(S.of(context).playerN(widget.viewModel.winner!)),
+            ),
             children: [
               FilledButton(
                 onPressed: () {
                   context.pop();
+                  context.go(Routes.mainMenu);
                 },
-                child: const Text('Finish'),
+                child: Text(S.of(context).finish),
               ),
             ],
           );

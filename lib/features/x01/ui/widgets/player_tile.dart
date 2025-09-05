@@ -1,5 +1,6 @@
 import 'package:darts_counter/features/x01/domain/models/player_model.dart';
 import 'package:darts_counter/features/x01/domain/models/points_model.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class PlayerTile extends StatelessWidget {
@@ -16,7 +17,7 @@ class PlayerTile extends StatelessWidget {
         border: Border.all(
           width: 2,
           color: isSelected
-              ? Theme.of(context).colorScheme.secondary
+              ? Theme.of(context).colorScheme.primary
               : Colors.transparent,
         ),
       ),
@@ -34,7 +35,10 @@ class PlayerTile extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(player.name, style: const TextStyle(fontSize: 16)),
+                Text(
+                  S.of(context).playerN(player.name),
+                  style: const TextStyle(fontSize: 16),
+                ),
               ],
             ),
           ),
@@ -70,9 +74,15 @@ class _ScoreField extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,
-      width: 35,
+      width: MediaQuery.of(context).size.width / 8,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Text(points.getString()),
+      child: Text(
+        points.getString(),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }
