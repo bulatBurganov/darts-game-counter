@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:darts_counter/features/x01/domain/constants/x01_constants.dart';
 import 'package:darts_counter/features/x01/domain/models/player_model.dart';
 import 'package:darts_counter/features/x01/domain/models/points_model.dart';
+import 'package:darts_counter/features/x01/domain/utils/finish_calculator.dart';
 
 class X01ViewModel extends ChangeNotifier {
   static const int maxHistoryLength = 100;
@@ -13,6 +14,7 @@ class X01ViewModel extends ChangeNotifier {
   GameStatus _status = GameStatus.playing;
   String? _winner;
   X01GameSettingsModel _settings;
+  List<Points>? _finishHint;
 
   List<PlayerModel> get players => _currentState.players;
   int get currentPlayerIndex => _currentState.currentPlayerIndex;
@@ -22,6 +24,7 @@ class X01ViewModel extends ChangeNotifier {
   GameStatus get status => _status;
   String? get winner => _winner;
   X01GameSettingsModel get settings => _settings;
+  List<Points>? get finishHint => _finishHint;
 
   GameState get _currentState => _history[_historyIndex];
 
@@ -56,6 +59,7 @@ class X01ViewModel extends ChangeNotifier {
     _historyIndex = 0;
     _status = GameStatus.playing;
     _winner = null;
+    _updateFinishHint();
   }
 
   int _getInitialScore() {
@@ -78,20 +82,16 @@ class X01ViewModel extends ChangeNotifier {
     final newPlayers = currentState.players.map((p) => p.copyWith()).toList();
     final currentPlayer = newPlayers[currentState.currentPlayerIndex];
 
-    // Обновляем текущие броски раунда
     var newRoundPoints = [...currentPlayer.currentRoundPoints];
     newRoundPoints[currentState.currentShot] = points;
 
-    // Проверяем, можно ли засчитать очки
     final canCount = _canCountPoints(currentPlayer, points);
     final pointsValue = canCount ? _calculatePointsValue(points) : 0;
     final newScore = currentPlayer.score - pointsValue;
 
-    // Проверяем, вошел ли игрок в игру
     final isEntryShot = !currentPlayer.isInGame && _isValidEntry(points);
     final newIsInGame = currentPlayer.isInGame || isEntryShot;
 
-    // Обновляем состояние игрока
     newPlayers[currentState.currentPlayerIndex] = currentPlayer.copyWith(
       score: newIsInGame ? newScore : currentPlayer.score,
       currentRoundPoints: newRoundPoints,
@@ -103,15 +103,12 @@ class X01ViewModel extends ChangeNotifier {
 
     final updatedPlayer = newPlayers[currentState.currentPlayerIndex];
 
-    // Если игрок только что вошел в игру, обрабатываем отдельно
     if (isEntryShot) {
       _handleNextShot(newPlayers, currentState);
       return;
     }
 
-    // Если игрок уже в игре, проверяем условия завершения
     if (newIsInGame) {
-      // Проверяем победу
       if (updatedPlayer.score == 0 &&
           _isValidFinish(
             updatedPlayer.currentRoundPoints,
@@ -121,12 +118,10 @@ class X01ViewModel extends ChangeNotifier {
         return;
       }
 
-      // Проверяем буст
       final isBust =
           updatedPlayer.score < 0 || _hasUnfinishableScore(updatedPlayer.score);
 
       if (isBust) {
-        // Восстанавливаем счет до начала хода
         newPlayers[currentState.currentPlayerIndex] = updatedPlayer.copyWith(
           score: updatedPlayer.startOfTurnScore,
           currentRoundPoints: const [
@@ -136,23 +131,18 @@ class X01ViewModel extends ChangeNotifier {
           ],
         );
 
-        // Переходим к следующему игроку
         _handleNextTurn(newPlayers, currentState);
         return;
       }
     }
 
-    // Если не было специальных условий, переходим к следующему броску
     _handleNextShot(newPlayers, currentState);
   }
 
   bool _canCountPoints(PlayerModel player, Points points) {
-    // Если игрок еще не вошел в игру, проверяем условия входа
     if (!player.isInGame) {
       return _isValidEntry(points);
     }
-
-    // Если игрок уже в игре, засчитываем все очки
     return true;
   }
 
@@ -165,18 +155,15 @@ class X01ViewModel extends ChangeNotifier {
   }
 
   bool _isValidFinish(List<Points> roundPoints, int startOfTurnScore) {
-    // Рассчитываем сумму всех очков в подходе
     int totalPoints = 0;
     for (Points points in roundPoints) {
       totalPoints += _calculatePointsValue(points);
     }
 
-    // Проверяем, что сумма очков точно равна начальному счету подхода
     if (totalPoints != startOfTurnScore) {
       return false;
     }
 
-    // Для валидного финиша нужно соответствие режиму выхода
     return switch (_settings.outMode) {
       InOutModes.straight => true,
       InOutModes.double => _isDoubleFinish(roundPoints),
@@ -185,7 +172,6 @@ class X01ViewModel extends ChangeNotifier {
   }
 
   bool _isDoubleFinish(List<Points> roundPoints) {
-    // Находим последний непустой бросок
     for (int i = roundPoints.length - 1; i >= 0; i--) {
       if (roundPoints[i] is! EmptyPoints) {
         return roundPoints[i] is DoublePoints;
@@ -195,7 +181,6 @@ class X01ViewModel extends ChangeNotifier {
   }
 
   bool _isTripleFinish(List<Points> roundPoints) {
-    // Находим последний непустой бросок
     for (int i = roundPoints.length - 1; i >= 0; i--) {
       if (roundPoints[i] is! EmptyPoints) {
         return roundPoints[i] is TriplePoints;
@@ -228,11 +213,9 @@ class X01ViewModel extends ChangeNotifier {
     int newCurrentPlayerIndex = currentState.currentPlayerIndex;
     int newCurrentRound = currentState.currentRound;
 
-    // Если это был последний бросок в раунде, переходим к следующему игроку
     if (newCurrentShot == X01Constants.shotsCount) {
       _handleNextTurn(newPlayers, currentState);
     } else {
-      // Продолжаем текущий раунд
       _addNewState(
         GameState(
           players: newPlayers,
@@ -250,12 +233,10 @@ class X01ViewModel extends ChangeNotifier {
         (currentState.currentPlayerIndex + 1) % newPlayers.length;
     int newCurrentRound = currentState.currentRound;
 
-    // Если переходим к первому игроку, увеличиваем раунд
     if (newCurrentPlayerIndex == 0) {
       newCurrentRound++;
     }
 
-    // Устанавливаем startOfTurnScore для следующего игрока
     newPlayers[newCurrentPlayerIndex] = newPlayers[newCurrentPlayerIndex]
         .copyWith(
           currentRoundPoints: const [
@@ -299,20 +280,44 @@ class X01ViewModel extends ChangeNotifier {
   }
 
   void _addNewState(GameState newState) {
-    // Удаляем все состояния после текущего индекса
     if (_historyIndex < _history.length - 1) {
       _history.removeRange(_historyIndex + 1, _history.length);
     }
 
     _history.add(newState);
 
-    // Ограничиваем размер истории
     if (_history.length > maxHistoryLength) {
       _history.removeAt(0);
     }
 
     _historyIndex = _history.length - 1;
+    _updateFinishHint();
     notifyListeners();
+  }
+
+  void _updateFinishHint() {
+    if (_status == GameStatus.finished) {
+      _finishHint = null;
+      return;
+    }
+
+    final player = _currentState.players[_currentState.currentPlayerIndex];
+    if (!player.isInGame) {
+      _finishHint = null;
+      return;
+    }
+
+    final remainingShots = X01Constants.shotsCount - _currentState.currentShot;
+    if (remainingShots == 0) {
+      _finishHint = null;
+      return;
+    }
+
+    _finishHint = FinishCalculator.calculateFinish(
+      player.score,
+      _settings.outMode,
+      remainingShots,
+    );
   }
 
   Future<void> undo() async {
@@ -320,11 +325,10 @@ class X01ViewModel extends ChangeNotifier {
 
     _historyIndex--;
 
-    // Восстанавливаем состояние игры
     final previousState = _history[_historyIndex];
     _status = previousState.status;
     _winner = previousState.winner;
-
+    _updateFinishHint();
     notifyListeners();
   }
 
