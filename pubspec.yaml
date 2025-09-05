@@ -39,6 +39,7 @@ dependencies:
   provider: ^6.1.5+1
 
 dev_dependencies:
+  flutter_flavorizr: ^2.4.1
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^5.0.0
   flutter_test:
@@ -82,3 +83,33 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 flutter_intl:
   enabled: true
+
+flavorizr:
+  app:
+    android:
+      flavorDimensions: "flavor-type"
+
+  flavors:
+    prod:
+      app:
+        name: "Счетчик дартс"
+      android:
+        applicationId: "com.bzstudio.dartscounter"
+      ios:
+        bundleId: "com.bzstudio.dartscounter"
+
+    dev:
+      app:
+        name: "Счетчик дартс Dev"
+      android:
+        applicationId: "com.bzstudio.dartscounter.dev"
+      ios:
+        bundleId: "com.bzstudio.dartscounter"
+
+    stage:
+      app:
+        name: "Счетчик дартс Stage"
+      android:
+        applicationId: "com.bzstudio.dartscounter.stage"
+      ios:
+        bundleId: "com.bzstudio.dartscounter"

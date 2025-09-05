@@ -1,11 +1,14 @@
 import 'package:darts_counter/features/navigation/router.dart';
 import 'package:darts_counter/features/ui-core/theme/app_theme.dart';
 import 'package:darts_counter/features/ui-core/theme/theme_provier.dart';
+import 'package:darts_counter/flavors.dart';
 import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
+void mainRunApp(Flavor flavor) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 
