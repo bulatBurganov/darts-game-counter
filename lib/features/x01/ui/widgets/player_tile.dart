@@ -1,5 +1,6 @@
 import 'package:darts_counter/features/x01/domain/models/player_model.dart';
 import 'package:darts_counter/features/x01/domain/models/points_model.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class PlayerTile extends StatelessWidget {
@@ -9,12 +10,18 @@ class PlayerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 350),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        border: isSelected ? Border.all(width: 1, color: Colors.red) : null,
+        border: Border.all(
+          width: 2,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Colors.transparent,
+        ),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           Expanded(
@@ -23,9 +30,15 @@ class PlayerTile extends StatelessWidget {
               children: [
                 Text(
                   player.score.toString(),
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Text(player.name, style: TextStyle(fontSize: 16)),
+                Text(
+                  S.of(context).playerN(player.name),
+                  style: const TextStyle(fontSize: 16),
+                ),
               ],
             ),
           ),
@@ -61,9 +74,15 @@ class _ScoreField extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,
-      width: 35,
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Text(points.getString()),
+      width: MediaQuery.of(context).size.width / 8,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Text(
+        points.getString(),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
-import 'package:darts_counter/features/x01/domain/constants/x01_params.dart';
+import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class X01ModeSelector extends StatefulWidget {
@@ -29,16 +30,16 @@ class _X01ModeSelectorState extends State<X01ModeSelector> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Mode',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        Text(
+          S.of(context).mode,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 8),
         GestureDetector(
           onTap: () async {
             final res = await showModalBottomSheet<X01Modes>(
               context: context,
-              builder: (context) => const X01ModeSelectorBottomSheet(),
+              builder: (context) => const _X01ModeSelectorBottomSheet(),
             );
             if (res != null) {
               setState(() {
@@ -57,7 +58,10 @@ class _X01ModeSelectorState extends State<X01ModeSelector> {
               children: [
                 Text(
                   selected.name.replaceAll('x', ''),
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const Icon(Icons.keyboard_arrow_down_outlined),
               ],
@@ -69,8 +73,8 @@ class _X01ModeSelectorState extends State<X01ModeSelector> {
   }
 }
 
-class X01ModeSelectorBottomSheet extends StatelessWidget {
-  const X01ModeSelectorBottomSheet({super.key});
+class _X01ModeSelectorBottomSheet extends StatelessWidget {
+  const _X01ModeSelectorBottomSheet();
 
   @override
   Widget build(BuildContext context) {
@@ -97,11 +101,19 @@ class X01ModeSelectorBottomSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
                 X01Modes.values[index].name.replaceAll('x', ''),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
-          separatorBuilder: (context, index) => const SizedBox(height: 4),
+          separatorBuilder: (context, index) => const Divider(
+            height: 16,
+            thickness: 0.5,
+            indent: 8,
+            endIndent: 8,
+          ),
           itemCount: X01Modes.values.length,
         ),
         SizedBox(height: MediaQuery.of(context).padding.bottom),

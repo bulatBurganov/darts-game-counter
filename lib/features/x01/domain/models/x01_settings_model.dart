@@ -1,27 +1,31 @@
-import 'package:darts_counter/features/x01/domain/constants/x01_params.dart';
+enum X01Modes { x101, x201, x301, x501, x701, x901, x1101, x1501 }
 
-class X01SettingsModel {
+enum InOutModes { straight, double, triple }
+
+class X01GameSettingsModel {
   final X01Modes mode;
   final InOutModes inMode;
   final InOutModes outMode;
   final int playersCount;
 
-  const X01SettingsModel({
+  const X01GameSettingsModel({
     this.mode = X01Modes.x301,
-    this.inMode = InOutModes.simple,
-    this.outMode = InOutModes.simple,
+    this.inMode = InOutModes.straight,
+    this.outMode = InOutModes.straight,
     this.playersCount = 2,
   });
 
-  X01SettingsModel copyWith({
+  X01GameSettingsModel copyWith({
     X01Modes? mode,
     InOutModes? inMode,
     InOutModes? outMode,
     int? playersCount,
-  }) => X01SettingsModel(
-    mode: mode ?? this.mode,
-    inMode: inMode ?? this.inMode,
-    outMode: outMode ?? this.outMode,
-    playersCount: playersCount ?? this.playersCount,
-  );
+  }) {
+    return X01GameSettingsModel(
+      mode: mode ?? this.mode,
+      inMode: inMode ?? this.inMode,
+      outMode: outMode ?? this.outMode,
+      playersCount: playersCount ?? this.playersCount,
+    );
+  }
 }

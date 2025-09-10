@@ -1,4 +1,5 @@
-import 'package:darts_counter/features/x01/domain/constants/x01_params.dart';
+import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
+import 'package:darts_counter/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class InOutModeSelector extends StatefulWidget {
@@ -9,12 +10,16 @@ class InOutModeSelector extends StatefulWidget {
     this.height = 50,
     this.padding = 4,
     this.initialValue,
+    this.selectorColor,
+    this.backgroundColor,
   });
   final Duration swithDuration;
   final double height;
   final double padding;
   final InOutModes? initialValue;
   final Function(InOutModes mode) onCahnged;
+  final Color? selectorColor;
+  final Color? backgroundColor;
 
   @override
   State<InOutModeSelector> createState() => _InOutModeSelectorState();
@@ -46,7 +51,7 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
               child: Container(
                 height: widget.height,
                 padding: EdgeInsets.all(widget.padding),
-                decoration: BoxDecoration(color: Colors.grey[200]),
+                decoration: BoxDecoration(color: widget.backgroundColor),
                 child: Stack(
                   children: [
                     AnimatedPositioned(
@@ -57,7 +62,7 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
                         width: itemWidth,
                         height: widget.height - widget.padding * 2,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: widget.selectorColor ?? Colors.blue,
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
@@ -81,7 +86,7 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
                                 style: TextStyle(
                                   color: (_selectedIndex == index)
                                       ? Colors.white
-                                      : Colors.black,
+                                      : Theme.of(context).colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
                                   overflow: TextOverflow.ellipsis,
@@ -114,9 +119,9 @@ class _InOutModeSelectorState extends State<InOutModeSelector> {
 
   String _getModeName(InOutModes mode, BuildContext context) {
     return switch (mode) {
-      InOutModes.simple => 'Straight',
-      InOutModes.double => 'Double',
-      InOutModes.triple => 'Triple',
+      InOutModes.straight => S.of(context).straight,
+      InOutModes.double => S.of(context).double,
+      InOutModes.triple => S.of(context).triple,
     };
   }
 }
