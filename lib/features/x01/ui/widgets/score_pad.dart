@@ -45,9 +45,11 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
                     value: i == 21 ? 25 : i,
                     onPressed: (points) {
                       if (_isDoublingEnabled) {
-                        widget.onScoreAdded(DoublePoints(value: points));
+                        if (i != 0) {
+                          widget.onScoreAdded(DoublePoints(value: points));
+                        }
                       } else if (_isTriplingEnabled) {
-                        if (i != 21) {
+                        if (i != 21 && i != 0) {
                           widget.onScoreAdded(TriplePoints(value: points));
                         }
                       } else {
@@ -90,7 +92,13 @@ class _ScoreInputSectionState extends State<ScoreInputSection> {
                   child: Text(S.of(context).triple),
                 ),
                 ElevatedButton(
-                  onPressed: widget.onUndo,
+                  onPressed: () {
+                    setState(() {
+                      _isDoublingEnabled = false;
+                      _isTriplingEnabled = false;
+                    });
+                    widget.onUndo();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                   ),
