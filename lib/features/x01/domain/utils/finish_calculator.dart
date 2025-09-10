@@ -1,4 +1,3 @@
-// finish_calculator.dart
 import 'package:darts_counter/features/x01/domain/models/points_model.dart';
 import 'package:darts_counter/features/x01/domain/models/x01_settings_model.dart';
 
@@ -6,57 +5,159 @@ class FinishCalculator {
   static List<Points>? calculateFinish(
     int score,
     InOutModes outMode,
-    int darts,
+    int remainingShots,
+    InOutModes inMode,
+    bool isInGame,
   ) {
-    if (score <= 0) return null;
+    if (score <= 0 || remainingShots == 0) return null;
 
-    final allThrows = _generateAllPossibleThrows();
-    final results = _findFinishCombinations(score, outMode, darts, allThrows);
+    // Получаем все возможные варианты финиша
+    final allFinishes = _findAllFinishes(
+      score,
+      remainingShots,
+      outMode,
+      inMode,
+      isInGame,
+    );
 
-    return results.isNotEmpty ? results.first : null;
-  }
+    if (allFinishes.isEmpty) return null;
 
-  static List<List<Points>> _findFinishCombinations(
-    int score,
-    InOutModes outMode,
-    int darts,
-    List<Points> allThrows,
-  ) {
-    final results = <List<Points>>[];
-
-    void find(
-      int currentScore,
-      int dartsLeft,
-      List<Points> currentCombination,
-    ) {
-      if (dartsLeft == 0) {
-        if (currentScore == 0 && _isValidFinish(currentCombination, outMode)) {
-          results.add([...currentCombination]);
-        }
-        return;
+    // Сортируем по приоритету: меньше дротиков -> проще сегменты
+    allFinishes.sort((a, b) {
+      // Приоритет: меньше дротиков
+      if (a.length != b.length) {
+        return a.length.compareTo(b.length);
       }
 
-      for (final thro in allThrows) {
-        final value = _calculatePointsValue(thro);
-        if (currentScore - value < 0) continue;
+      // Затем: меньше сложных сегментов (кроме последнего)
+      final aComplexity = _calculateComplexity(a, outMode);
+      final bComplexity = _calculateComplexity(b, outMode);
+      return aComplexity.compareTo(bComplexity);
+    });
 
-        currentCombination.add(thro);
-        find(currentScore - value, dartsLeft - 1, currentCombination);
-        currentCombination.removeLast();
+    return allFinishes.first;
+  }
+
+  static List<List<Points>> _findAllFinishes(
+    int score,
+    int maxDarts,
+    InOutModes outMode,
+    InOutModes inMode,
+    bool isInGame,
+  ) {
+    final finishes = <List<Points>>[];
+
+    void findFinishes(
+      int currentScore,
+      int dartsLeft,
+      List<Points> currentPath,
+      bool currentInGame,
+    ) {
+      if (dartsLeft == 0 || currentScore < 0) return;
+
+      // Определяем доступные броски для текущего состояния
+      final availableDarts = _getAvailableDarts(
+        currentScore,
+        currentInGame ? InOutModes.straight : inMode,
+      );
+
+      for (final dart in availableDarts) {
+        final dartValue = _calculatePointsValue(dart);
+        final newScore = currentScore - dartValue;
+        final newInGame = currentInGame || _isValidEntry(dart, inMode);
+        final newPath = [...currentPath, dart];
+
+        if (newScore == 0 && newInGame) {
+          // Проверяем валидность финиша
+          if (_isValidFinish(newPath, outMode)) {
+            finishes.add(newPath);
+          }
+        } else if (newScore > 0 && dartsLeft > 1) {
+          // Продолжаем поиск рекурсивно
+          findFinishes(newScore, dartsLeft - 1, newPath, newInGame);
+        }
       }
     }
 
-    find(score, darts, []);
-    return results;
+    findFinishes(score, maxDarts, [], isInGame);
+    return finishes;
   }
 
-  static bool _isValidFinish(List<Points> combination, InOutModes outMode) {
-    final lastThrow = combination.last;
+  static List<Points> _getAvailableDarts(int score, InOutModes mode) {
+    final darts = <Points>[];
 
+    // Добавляем возможные броски в зависимости от режима
+    switch (mode) {
+      case InOutModes.straight:
+        // Все сегменты от 1 до 20
+        for (int i = 1; i <= 20; i++) {
+          if (i <= score) darts.add(RegularPoints(value: i));
+          if (i * 2 <= score) darts.add(DoublePoints(value: i));
+          if (i * 3 <= score) darts.add(TriplePoints(value: i));
+        }
+        // Булл
+        if (25 <= score) darts.add(const RegularPoints(value: 25));
+        if (50 <= score) darts.add(const DoublePoints(value: 25));
+        break;
+
+      case InOutModes.double:
+        // Только двойные сегменты
+        for (int i = 1; i <= 20; i++) {
+          if (i * 2 <= score) darts.add(DoublePoints(value: i));
+        }
+        // Двойной булл
+        if (50 <= score) darts.add(const DoublePoints(value: 25));
+        break;
+
+      case InOutModes.triple:
+        // Только тройные сегменты
+        for (int i = 1; i <= 20; i++) {
+          if (i * 3 <= score) darts.add(TriplePoints(value: i));
+        }
+        break;
+    }
+
+    return darts;
+  }
+
+  static int _calculateComplexity(List<Points> finish, InOutModes outMode) {
+    int complexity = 0;
+
+    // Учитываем сложность всех бросков, кроме последнего
+    for (int i = 0; i < finish.length - 1; i++) {
+      complexity += _getDartComplexity(finish[i]);
+    }
+
+    // Для последнего броска учитываем только если outMode straight
+    if (outMode == InOutModes.straight) {
+      complexity += _getDartComplexity(finish.last);
+    }
+
+    return complexity;
+  }
+
+  static int _getDartComplexity(Points dart) {
+    return switch (dart) {
+      RegularPoints() => 1, // Обычные сегменты - самые простые
+      DoublePoints() => 2, // Двойные - средней сложности
+      TriplePoints() => 3, // Тройные - самые сложные
+      EmptyPoints() => 0,
+    };
+  }
+
+  static bool _isValidEntry(Points points, InOutModes inMode) {
+    return switch (inMode) {
+      InOutModes.straight => true,
+      InOutModes.double => points is DoublePoints,
+      InOutModes.triple => points is TriplePoints,
+    };
+  }
+
+  static bool _isValidFinish(List<Points> finish, InOutModes outMode) {
     return switch (outMode) {
       InOutModes.straight => true,
-      InOutModes.double => lastThrow is DoublePoints,
-      InOutModes.triple => lastThrow is TriplePoints,
+      InOutModes.double => finish.last is DoublePoints,
+      InOutModes.triple => finish.last is TriplePoints,
     };
   }
 
@@ -67,28 +168,5 @@ class FinishCalculator {
       TriplePoints() => points.value * 3,
       EmptyPoints() => 0,
     };
-  }
-
-  static List<Points> _generateAllPossibleThrows() {
-    final t = <Points>[];
-
-    // Add regular points (1-20, 25)
-    for (int i = 1; i <= 20; i++) {
-      t.add(RegularPoints(value: i));
-    }
-    t.add(const RegularPoints(value: 25));
-
-    // Add double points (D1-D20, D25)
-    for (int i = 1; i <= 20; i++) {
-      t.add(DoublePoints(value: i));
-    }
-    t.add(const DoublePoints(value: 25));
-
-    // Add triple points (T1-T20)
-    for (int i = 1; i <= 20; i++) {
-      t.add(TriplePoints(value: i));
-    }
-
-    return t;
   }
 }

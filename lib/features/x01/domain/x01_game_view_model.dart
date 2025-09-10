@@ -317,6 +317,8 @@ class X01ViewModel extends ChangeNotifier {
       player.score,
       _settings.outMode,
       remainingShots,
+      _settings.inMode, // Передаем режим входа для учета условий начала игры
+      player.isInGame,
     );
   }
 
