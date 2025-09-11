@@ -69,6 +69,26 @@ void main() {
       expect(viewModel.players[0].isInGame, true);
     });
 
+    test('should handle triple in mode correctly', () async {
+      const settings = X01GameSettingsModel(
+        mode: X01Modes.x501,
+        playersCount: 2,
+        inMode: InOutModes.triple,
+        outMode: InOutModes.double,
+      );
+      final viewModel = X01ViewModel(settings: settings);
+
+      // Regular points shouldn't count before double in
+      await viewModel.addPoints(const RegularPoints(value: 20));
+      expect(viewModel.players[0].score, 501);
+      expect(viewModel.players[0].isInGame, false);
+
+      // triple should allow entry
+      await viewModel.addPoints(const TriplePoints(value: 10));
+      expect(viewModel.players[0].score, 501 - 30);
+      expect(viewModel.players[0].isInGame, true);
+    });
+
     test('should handle bust correctly', () async {
       const settings = X01GameSettingsModel(
         mode: X01Modes.x101,
