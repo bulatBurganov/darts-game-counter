@@ -192,18 +192,7 @@ void main() {
     });
 
     test('should handle game with different modes', () {
-      const modes = [
-        X01Modes.x101,
-        X01Modes.x201,
-        X01Modes.x301,
-        X01Modes.x501,
-        X01Modes.x701,
-        X01Modes.x901,
-        X01Modes.x1101,
-        X01Modes.x1501,
-      ];
-
-      for (final mode in modes) {
+      for (final mode in X01Modes.values) {
         final settings = X01GameSettingsModel(
           mode: mode,
           playersCount: 2,
@@ -212,14 +201,8 @@ void main() {
         );
         final viewModel = X01ViewModel(settings: settings);
 
-        expect(
-          viewModel.players[0].score,
-          int.parse(mode.name.replaceAll('x', '')),
-        );
-        expect(
-          viewModel.players[1].score,
-          int.parse(mode.name.replaceAll('x', '')),
-        );
+        expect(viewModel.players[0].score, mode.val);
+        expect(viewModel.players[1].score, mode.val);
       }
     });
   });
