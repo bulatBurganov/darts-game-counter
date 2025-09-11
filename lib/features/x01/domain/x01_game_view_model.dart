@@ -34,7 +34,7 @@ class X01ViewModel extends ChangeNotifier {
   }
 
   void _initNewGame() {
-    final initialScore = _getInitialScore();
+    final initialScore = _settings.mode.val;
 
     final players = List<PlayerModel>.generate(
       _settings.playersCount,
@@ -60,19 +60,6 @@ class X01ViewModel extends ChangeNotifier {
     _status = GameStatus.playing;
     _winner = null;
     _updateFinishHint();
-  }
-
-  int _getInitialScore() {
-    return switch (_settings.mode) {
-      X01Modes.x101 => 101,
-      X01Modes.x201 => 201,
-      X01Modes.x301 => 301,
-      X01Modes.x501 => 501,
-      X01Modes.x701 => 701,
-      X01Modes.x901 => 901,
-      X01Modes.x1101 => 1101,
-      X01Modes.x1501 => 1501,
-    };
   }
 
   Future<void> addPoints(Points points) async {
@@ -109,15 +96,30 @@ class X01ViewModel extends ChangeNotifier {
     }
 
     if (newIsInGame) {
-      if (updatedPlayer.score == 0 &&
-          _isValidFinish(
-            updatedPlayer.currentRoundPoints,
-            currentPlayer.startOfTurnScore,
-          )) {
-        _finishGame(newPlayers, currentState, currentPlayer.name);
-        return;
+      // Проверяем, достиг ли игрок нуля
+      if (updatedPlayer.score == 0) {
+        if (_isValidFinish(
+          updatedPlayer.currentRoundPoints,
+          currentPlayer.startOfTurnScore,
+        )) {
+          _finishGame(newPlayers, currentState, currentPlayer.name);
+          return;
+        } else {
+          // Бросок не засчитывается, восстанавливаем счет
+          newPlayers[currentState.currentPlayerIndex] = updatedPlayer.copyWith(
+            score: updatedPlayer.startOfTurnScore,
+            currentRoundPoints: const [
+              EmptyPoints(),
+              EmptyPoints(),
+              EmptyPoints(),
+            ],
+          );
+          _handleNextTurn(newPlayers, currentState);
+          return;
+        }
       }
 
+      // Проверяем другие случаи буста (перебор или невозможность завершения)
       final isBust =
           updatedPlayer.score < 0 || _hasUnfinishableScore(updatedPlayer.score);
 
@@ -139,18 +141,13 @@ class X01ViewModel extends ChangeNotifier {
     _handleNextShot(newPlayers, currentState);
   }
 
-  bool _canCountPoints(PlayerModel player, Points points) {
-    if (!player.isInGame) {
-      return _isValidEntry(points);
-    }
-    return true;
-  }
+  bool _hasUnfinishableScore(int score) {
+    if (score < 0) return true;
 
-  bool _isValidEntry(Points points) {
-    return switch (_settings.inMode) {
-      InOutModes.straight => true,
-      InOutModes.double => points is DoublePoints,
-      InOutModes.triple => points is TriplePoints,
+    return switch (_settings.outMode) {
+      InOutModes.straight => false,
+      InOutModes.double => score == 1,
+      InOutModes.triple => score == 1 || score == 2,
     };
   }
 
@@ -172,6 +169,7 @@ class X01ViewModel extends ChangeNotifier {
   }
 
   bool _isDoubleFinish(List<Points> roundPoints) {
+    // Ищем последний непустой бросок
     for (int i = roundPoints.length - 1; i >= 0; i--) {
       if (roundPoints[i] is! EmptyPoints) {
         return roundPoints[i] is DoublePoints;
@@ -181,6 +179,7 @@ class X01ViewModel extends ChangeNotifier {
   }
 
   bool _isTripleFinish(List<Points> roundPoints) {
+    // Ищем последний непустой бросок
     for (int i = roundPoints.length - 1; i >= 0; i--) {
       if (roundPoints[i] is! EmptyPoints) {
         return roundPoints[i] is TriplePoints;
@@ -189,13 +188,18 @@ class X01ViewModel extends ChangeNotifier {
     return false;
   }
 
-  bool _hasUnfinishableScore(int score) {
-    if (score < 0) return true;
+  bool _canCountPoints(PlayerModel player, Points points) {
+    if (!player.isInGame) {
+      return _isValidEntry(points);
+    }
+    return true;
+  }
 
-    return switch (_settings.outMode) {
-      InOutModes.straight => false,
-      InOutModes.double => score == 1,
-      InOutModes.triple => score == 1 || score == 2,
+  bool _isValidEntry(Points points) {
+    return switch (_settings.inMode) {
+      InOutModes.straight => true,
+      InOutModes.double => points is DoublePoints,
+      InOutModes.triple => points is TriplePoints,
     };
   }
 
@@ -317,6 +321,8 @@ class X01ViewModel extends ChangeNotifier {
       player.score,
       _settings.outMode,
       remainingShots,
+      _settings.inMode, // Передаем режим входа для учета условий начала игры
+      player.isInGame,
     );
   }
 
@@ -330,15 +336,5 @@ class X01ViewModel extends ChangeNotifier {
     _winner = previousState.winner;
     _updateFinishHint();
     notifyListeners();
-  }
-
-  void restartGame() {
-    _initNewGame();
-    notifyListeners();
-  }
-
-  void updateSettings(X01GameSettingsModel newSettings) {
-    _settings = newSettings;
-    restartGame();
   }
 }

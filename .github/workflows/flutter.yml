@@ -50,6 +50,8 @@ jobs:
      - name: Flutter analyze
        run: flutter analyze
 
+     - name: unit test
+       run: flutter test
 
 
      - name: Decode Keystore

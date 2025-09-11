@@ -57,7 +57,7 @@ class _X01ModeSelectorState extends State<X01ModeSelector> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  selected.name.replaceAll('x', ''),
+                  selected.val.toString(),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -100,7 +100,7 @@ class _X01ModeSelectorBottomSheet extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                X01Modes.values[index].name.replaceAll('x', ''),
+                X01Modes.values[index].val.toString(),
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
