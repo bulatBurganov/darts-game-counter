@@ -1,0 +1,86 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+
+
+name: Dart
+
+
+
+on:
+ workflow_dispatch: # запуск руками
+ push:
+   branches: [ "main" ]
+ pull_request:
+   branches: [ "main" ]
+
+
+
+jobs:
+ build:
+   runs-on: ubuntu-latest
+
+
+
+   steps:
+     - uses: actions/checkout@v3
+
+
+
+     - uses: subosito/flutter-action@v2
+       with:
+         flutter-version: "3.32.1"
+         channel: "stable"
+         cache: true
+         pub-cache-path: "~/.pub-cache" # кэш pub packages
+         pub-cache-key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+
+
+
+
+
+
+     - name: Install dependencies
+       run: flutter pub get
+
+
+
+     - name: Flutter analyze
+       run: flutter analyze
+
+
+
+     - name: Decode Keystore
+       run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > android/app/upload-keystore.jks
+
+
+
+     - name: Create key.properties
+       run: |
+         echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
+         echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+         echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+         echo "storeFile=../app/upload-keystore.jks" >> android/key.properties
+
+
+     #- name: Build AppBundle
+     #  run: flutter build appbundle --release
+
+
+
+     - name: Build APK
+       run: flutter build apk --flavor prod -t lib/main_prod.dart
+
+
+
+     - name: Upload artifacts
+       uses: actions/upload-artifact@v4
+       with:
+         name: android-release-builds
+         path: |
+           build/app/outputs/flutter-apk/app-prod-release.apk
+      #     build/app/outputs/bundle/release/app-release.aab
+
+
