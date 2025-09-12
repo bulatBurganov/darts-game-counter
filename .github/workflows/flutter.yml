@@ -50,7 +50,7 @@ jobs:
      - name: Flutter analyze
        run: flutter analyze
 
-     - name: unit test
+     - name: Unit tests
        run: flutter test
 
 

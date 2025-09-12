@@ -13,7 +13,7 @@ class X01ViewModel extends ChangeNotifier {
   int _historyIndex = -1;
   GameStatus _status = GameStatus.playing;
   String? _winner;
-  X01GameSettingsModel _settings;
+  final X01GameSettingsModel _settings;
   List<Points>? _finishHint;
 
   List<PlayerModel> get players => _currentState.players;
